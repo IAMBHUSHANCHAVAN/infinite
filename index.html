@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Video Player</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+      body {
+        margin: 0; /* Remove default margin */
+        padding: 0; /* Remove default padding */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        width: 100%;
+      }
+      .video-container {
+        position: relative;        
+        width: 100%; /* Adjust container width as needed */
+        height: 100%; /* Adjust container height as needed */
+      }
+      .video-container video {
+        width: 100%; /* Take full width of container */
+        object-fit: cover;
+        height: 100%; /* Take full height of container */
+      }
+      .play-icon {
+        position: absolute;
+        font-size: 5em; /* Adjust icon size as needed */
+        right: 50%;
+        top: 50%;
+        color: white;
+        cursor: pointer; /* Change cursor to pointer on hover */
+        transform: translate(50%, -50%); /* Center the icon */
+      }
+    </style>
+  </head>
+  <body>
+    <div class="video-container">
+      <video id="firstVideo" controls>
+        <source src="video31.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <i id="playIcon" class="fa fa-play play-icon"></i>
+    </div>
+
+    <div class="video-container" style="display: none">
+      <video id="secondVideo" controls>
+        <source src="video32.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <div class="video-container" style="display: none">
+      <video id="thirdVideo" controls>
+        <source src="video3.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+
+    <script>
+      const firstVideo = document.getElementById("firstVideo");
+      const secondVideo = document.getElementById("secondVideo");
+      const thirdVideo = document.getElementById("thirdVideo");
+      const playIcon = document.getElementById("playIcon");
+
+      let currentVideo = firstVideo; // Track the current video
+
+      // Function to transition between videos
+      function transitionVideos(nextVideo) {
+        currentVideo.pause(); // Pause the current video
+        currentVideo.parentElement.style.display = "none";
+        nextVideo.parentElement.style.display = "block";
+        nextVideo.play();
+        currentVideo = nextVideo; // Update current video
+      }
+
+      // Function to toggle play/pause when spacebar is pressed
+      function togglePlayPause(event) {
+        if (event.keyCode === 32) { // 32 is the keycode for spacebar
+          event.preventDefault(); // Prevent spacebar from scrolling the page
+          if (currentVideo.paused) {
+            currentVideo.play();
+            playIcon.style.display = "none"; // Hide the play icon when playing
+          } else {
+            currentVideo.pause();
+          }
+        }
+      }
+
+      playIcon.addEventListener("click", function () {
+        firstVideo.play();
+        playIcon.style.display = "none"; // Hide the play icon after clicking
+      });
+
+      firstVideo.addEventListener("pause", function () {
+        transitionVideos(secondVideo);
+      });
+
+      secondVideo.addEventListener("pause", function () {
+        transitionVideos(thirdVideo);
+      });
+
+      thirdVideo.addEventListener("ended", function () {
+        // Reload the page when the third video ends
+        location.reload();
+      });
+
+      // Pause the first video initially
+      firstVideo.pause();
+
+      // Add event listener for spacebar press
+      document.addEventListener("keydown", togglePlayPause);
+    </script>
+  </body>
+</html>
